@@ -13,8 +13,16 @@ const SavedBooks = () => {
   
   const userData = data?.me || {};
   
-  const [removeBook, {error}] = useMutation(REMOVE_BOOK);
-  // use this to determine if `useEffect()` hook needs to run again
+  const [removeBook, {error}] = useMutation(REMOVE_BOOK, {
+    update(cache, { data: { removeBook }}) {
+      const { me } = cache.readQuery({ query: QUERY_ME });
+      cache.writeQuery({
+        query: QUERY_ME,
+        data: { me: { ...me, savedBooks: [...me.savedBooks, removeBook] } },
+      });
+    } 
+  });
+
 
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
