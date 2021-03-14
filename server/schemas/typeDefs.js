@@ -10,11 +10,10 @@ typeDefs = gql`
   }
 
   type Book {
-    _id: ID!
-    bookId: ID
+    bookId: ID!
     authors: [String]
     description: String
-    title: String
+    title: String!
     image: String
     link: String
   }
@@ -22,7 +21,7 @@ typeDefs = gql`
   input SaveBookInput {
     bookId: ID!
     authors: [String]
-    description: String!
+    description: String
     title: String!
     image: String
     link: String
