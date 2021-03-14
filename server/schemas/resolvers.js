@@ -4,7 +4,21 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-        // checks to make sure I am who I am supposed to be
+        //get all users
+        users: async () => {
+            return User.find()
+                .select('-__v -password')
+                .populate('thoughts')
+                .populate('friends');
+                
+        },
+        // get a user by username
+        user: async (parent, { username }) => {
+            return User.findOne({ username })
+            .select('-__v -password')
+            .populate('friends')
+            .populate('thoughts');
+        },
         me: async (parent, args, context) => {
             if (context.user) {
                 const userData = await User.findOne({ _id: context.user._id })
@@ -26,8 +40,8 @@ const resolvers = {
             return  { token, user };
             // return user;
         },
-        login: async (parent, { username, password }) => {
-            const user = await User.findOne({ username });
+        login: async (parent, { email, password }) => {
+            const user = await User.findOne({ email });
             if (!user) {
                 throw new AuthenticationError('Incorrect credentials');
             }
