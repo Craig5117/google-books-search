@@ -1,10 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Jumbotron,
   Container,
-  CardColumns,
-  Card,
-  Button,
 } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { REMOVE_BOOK } from '../utils/mutations';
@@ -12,13 +9,16 @@ import { QUERY_ME } from '../utils/queries';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 import { useHistory } from 'react-router-dom';
+import Booklist from '../components/Booklist'
 
 const SavedBooks = () => {
   // get My data
   const { loading, data } = useQuery(QUERY_ME);
   const history = useHistory();
-  const userData = data?.me || {};
-
+  const [userData, setUserData] = useState({});
+  if (data.me) {
+    setUserData(data.me)
+  }
   const [removeBook, { error }] = useMutation(REMOVE_BOOK, {
     update(cache, { data: { removeBook } }) {
       const { me } = cache.readQuery({ query: QUERY_ME });
@@ -66,46 +66,16 @@ const SavedBooks = () => {
           <h1>Viewing saved books!</h1>
         </Container>
       </Jumbotron>
-      <Container>
-        <h2>
-          {userData.savedBooks.length
-            ? `Viewing ${userData.savedBooks.length} saved ${
-                userData.savedBooks.length === 1 ? 'book' : 'books'
+      {data?.me  ( <Container>
+     <h2>
+          {data.me.savedBooks.length
+            ? `Viewing ${data.me.savedBooks.length} saved ${
+                data.me.savedBooks.length === 1 ? 'book' : 'books'
               }:`
             : 'You have no saved books!'}
         </h2>
-        <CardColumns>
-          {userData.savedBooks.map((book) => {
-            return (
-              <Card key={book.bookId} border="dark">
-                {book.image ? (
-                  <Card.Img
-                    src={book.image}
-                    alt={`The cover for ${book.title}`}
-                    variant="top"
-                  />
-                ) : null}
-                <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
-                  <p className="small">Authors: {book.authors}</p>
-                  {book.link && (
-                    <Card.Link href={book.link}>
-                      See it on Google Books
-                    </Card.Link>
-                  )}
-                  <Card.Text>{book.description}</Card.Text>
-                  <Button
-                    className="btn-block btn-danger"
-                    onClick={() => handleDeleteBook(book.bookId)}
-                  >
-                    Delete this Book!
-                  </Button>
-                </Card.Body>
-              </Card>
-            );
-          })}
-        </CardColumns>
-      </Container>
+        <Booklist userData={userData} handleDeleteBook={handleDeleteBook}/>
+      </Container>)}
     </>
   );
 };
