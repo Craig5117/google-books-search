@@ -1,12 +1,11 @@
 import React from 'react';
-import Auth from './utils/auth'
 import { ApolloProvider } from '@apollo/react-hooks';
 import ApolloClient from 'apollo-boost';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
-import LoginFirst from './pages/LoginFirst';
+
 
 
 const client = new ApolloClient({
@@ -22,9 +21,6 @@ const client = new ApolloClient({
 });
 
 function App() {
-  
-  const loggedIn = Auth.loggedIn();
-  console.log(loggedIn)
   // Maybe could add useState for loggedIn to toggle save book buttons
   return (
     <ApolloProvider client={client}>

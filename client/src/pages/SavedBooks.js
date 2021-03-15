@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Jumbotron,
   Container,
@@ -11,23 +11,20 @@ import { REMOVE_BOOK } from '../utils/mutations';
 import { QUERY_ME } from '../utils/queries';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
-import { useHistory } from 'react-router-dom';
+
 
 const SavedBooks = () => {
   // get My data
-  const { loading, data } = useQuery(QUERY_ME);
-  const history = useHistory();
-  const userData = data?.me || {};
-
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK, {
-    update(cache, { data: { removeBook } }) {
-      const { me } = cache.readQuery({ query: QUERY_ME });
-      cache.writeQuery({
-        query: QUERY_ME,
-        data: { me: { ...me, savedBooks: [...me.savedBooks, removeBook] } },
-      });
-    },
-  });
+  const [userData, setUserData] = useState({});
+  const { data } = useQuery(QUERY_ME,
+    {onCompleted: () => {
+      setUserData(data.me)
+    }});
+ 
+ 
+  const userDataLength = Object.keys(userData).length;
+ 
+  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -41,23 +38,29 @@ const SavedBooks = () => {
       const updatedData = await removeBook({
         variables: { bookId: bookId },
       });
-      console.log(bookId);
+      // console.log(bookId);
       if (error) {
         throw new Error('something went wrong!');
       }
+      setUserData(updatedData.data.removeBook);
       removeBookId(bookId);
-      console.log(updatedData);
+      
 
-      history.go(0);
     } catch (err) {
       console.error(err);
     }
   };
+  const token = Auth.loggedIn() ? Auth.getToken() : null;
 
+    if (!token) {
+      return (
+        <h2>Please login first</h2>
+      );
+    }
   // if data isn't here yet, say so
-  if (loading) {
+  if (!userDataLength) {
     return <h2>LOADING...</h2>;
-  }
+  } 
 
   return (
     <>
@@ -68,7 +71,7 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {userData.savedBooks.length
+          {userDataLength
             ? `Viewing ${userData.savedBooks.length} saved ${
                 userData.savedBooks.length === 1 ? 'book' : 'books'
               }:`
