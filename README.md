@@ -1,4 +1,7 @@
 # Google Books Search
+
+![Screenshot of Google Books Search](./screenshots/screenshot_1.webp)
+
 ## Description 
 
 Google Books Search is a React app that allows you to search for books using Google Books API and save a list of books to your account.
