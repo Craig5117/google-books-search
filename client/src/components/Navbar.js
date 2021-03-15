@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container, Modal, Tab } from 'react-bootstrap';
 import SignUpForm from './SignupForm';
@@ -9,7 +9,7 @@ import Auth from '../utils/auth';
 const AppNavbar = (props) => {
   // set modal display state
   // const [showModal, setShowModal] = useState(false);
-  const { showModal, setShowModal } = props;
+  const [showModal, setShowModal] = useState(false);
   return (
     <>
       <Navbar bg='dark' variant='dark' expand='lg'>

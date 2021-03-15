@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Auth from './utils/auth'
 import { ApolloProvider } from '@apollo/react-hooks';
 import ApolloClient from 'apollo-boost';
@@ -22,7 +22,7 @@ const client = new ApolloClient({
 });
 
 function App() {
-  const [showModal, setShowModal] = useState(false);
+  
   const loggedIn = Auth.loggedIn();
   console.log(loggedIn)
   // Maybe could add useState for loggedIn to toggle save book buttons
@@ -30,12 +30,11 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <>
-          <Navbar showModal={showModal} setShowModal={setShowModal}/>
+          <Navbar />
           <Switch>
             <Route exact path="/" component={SearchBooks} />
-            {loggedIn ? (<Route exact path="/saved" component={SavedBooks} />) : 
-            (<Route exact path="/saved" component={LoginFirst}/>)}
-            
+            <Route exact path="/saved" component={SavedBooks} /> 
+                        
             <Route render={() => <h1 className="display-2">Wrong page!</h1>} />
           </Switch>
         </>
