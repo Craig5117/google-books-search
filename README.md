@@ -56,6 +56,8 @@ To use, follow the provided link, sign up to create an account, and search. When
 ---
     
 Craig Bennett
+
+- Converted this app from REST to GraphQL.
     
 [Craig5117](https://github.com/Craig5117)
 
