@@ -4,7 +4,7 @@
 
 ## Description 
 
-Google Books Search is a React app that allows you to search for books using Google Books API and save a list of books to your account.
+Google Books Search is a React app that allows you to search for books using Google Books API and save a list of books to your account. Built with React and GraphQL.
 
 
 
@@ -56,6 +56,8 @@ To use, follow the provided link, sign up to create an account, and search. When
 ---
     
 Craig Bennett
+
+- Converted this app from REST to GraphQL.
     
 [Craig5117](https://github.com/Craig5117)
 
